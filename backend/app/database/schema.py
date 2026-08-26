@@ -1,7 +1,9 @@
 from sqlalchemy import inspect
 
+from app.models.schema import DatabaseSchema
 
-def extract_schema(engine):
+
+def extract_schema(engine, database_type: str) -> DatabaseSchema:
     inspector = inspect(engine)
 
     tables = []
@@ -19,8 +21,13 @@ def extract_schema(engine):
         foreign_keys = []
 
         for foreign_key in inspector.get_foreign_keys(table_name):
-            constrained_columns = foreign_key.get("constrained_columns", [])
-            referred_columns = foreign_key.get("referred_columns", [])
+            constrained_columns = foreign_key.get(
+                "constrained_columns", []
+            )
+
+            referred_columns = foreign_key.get(
+                "referred_columns", []
+            )
 
             for column, referred_column in zip(
                 constrained_columns,
@@ -38,4 +45,7 @@ def extract_schema(engine):
             "foreign_keys": foreign_keys,
         })
 
-    return tables
+    return DatabaseSchema(
+        database_type=database_type,
+        tables=tables,
+    )

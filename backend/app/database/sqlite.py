@@ -23,7 +23,10 @@ class SQLiteAdapter(DatabaseAdapter):
       if self.engine is None:
           self.connect()
 
-      return extract_schema(self.engine)
+      return extract_schema(
+          self.engine,
+          "sqlite"
+      )
 
     def execute_query(self, sql: str):
         if self.engine is None:
