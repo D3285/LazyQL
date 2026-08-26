@@ -1,0 +1,11 @@
+# This project intentionally uses only the Python standard library
+# (urllib, json, dataclasses) so it runs anywhere without dependency
+# headaches during the hackathon.
+#
+# The only external requirement is that Ollama (or your chosen local LLM
+# runtime) is installed and running separately:
+#   https://ollama.com
+#
+# If you'd rather use the official `openai`-style SDK or `requests`
+# instead of urllib, uncomment below:
+# requests>=2.31.0
