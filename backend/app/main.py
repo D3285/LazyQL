@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 
 from app.api.routes.database import router as database_router
+from app.api.routes.generate import router as generate_router
 
 app = FastAPI(
     title="LazyQL API",
@@ -8,7 +9,7 @@ app = FastAPI(
 )
 
 app.include_router(database_router)
-
+app.include_router(generate_router)
 
 @app.get("/health")
 def health():

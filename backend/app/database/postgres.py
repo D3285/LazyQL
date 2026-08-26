@@ -1,6 +1,8 @@
-from sqlalchemy import create_engine, text  # type: ignore[reportMissingImports]
+from sqlalchemy import create_engine, text
 
 from .base import DatabaseAdapter
+from .exceptions import DatabaseConnectionError
+from .schema import extract_schema
 
 
 class PostgreSQLAdapter(DatabaseAdapter):
@@ -10,19 +12,51 @@ class PostgreSQLAdapter(DatabaseAdapter):
         self.engine = None
 
     def connect(self) -> bool:
-        self.engine = create_engine(self.connection_url)
+        try:
+            self.engine = create_engine(self.connection_url)
 
-        with self.engine.connect() as connection:
-            connection.execute(text("SELECT 1"))
+            with self.engine.connect() as connection:
+                connection.execute(text("SELECT 1"))
 
-        return True
+            return True
+
+        except Exception as exc:
+            self.engine = None
+
+            raise DatabaseConnectionError(
+                "Unable to connect to PostgreSQL database"
+            ) from exc
 
     def get_schema(self):
-        pass
+        if self.engine is None:
+            self.connect()
+
+        return extract_schema(
+            self.engine,
+            "postgresql",
+        )
 
     def execute_query(self, sql: str):
-        pass
+        if self.engine is None:
+            raise RuntimeError(
+                "Database is not connected"
+            )
+
+        with self.engine.begin() as connection:
+            result = connection.execute(text(sql))
+
+            columns = list(result.keys())
+            rows = [
+                list(row)
+                for row in result.fetchall()
+            ]
+
+            return {
+                "columns": columns,
+                "rows": rows,
+            }
 
     def close(self):
         if self.engine:
             self.engine.dispose()
+            self.engine = None

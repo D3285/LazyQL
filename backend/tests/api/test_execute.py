@@ -15,7 +15,7 @@ DATABASE_PATH = (
 )
 
 
-def test_get_database_schema():
+def test_execute_query():
     session_response = client.post(
         "/database/session",
         json={
@@ -29,9 +29,14 @@ def test_get_database_schema():
     session_id = session_response.json()["session_id"]
 
     response = client.post(
-        "/database/schema",
-        params={
+        "/database/execute",
+        json={
             "session_id": session_id,
+            "sql": (
+                "SELECT name, salary "
+                "FROM employees "
+                "ORDER BY salary DESC"
+            ),
         },
     )
 
@@ -39,33 +44,21 @@ def test_get_database_schema():
 
     data = response.json()
 
-    assert data["database_type"] == "sqlite"
-
-    table_names = [
-        table["name"]
-        for table in data["tables"]
+    assert data["success"] is True
+    assert data["columns"] == [
+        "name",
+        "salary",
     ]
 
-    assert "employees" in table_names
-    assert "departments" in table_names
-
-
-def test_database_session_connection_error():
+    assert len(data["rows"]) == 3
+    
+def test_execute_query_invalid_session():
     response = client.post(
-        "/database/session",
+        "/database/execute",
         json={
-            "database_type": "sqlite",
-            "connection_url": (
-                "Z:/this/path/does/not/exist/"
-                "database.db"
-            ),
+            "session_id": "does-not-exist",
+            "sql": "SELECT 1",
         },
     )
 
-    assert response.status_code == 503
-
-    data = response.json()
-
-    assert data["detail"] == (
-        "Unable to connect to SQLite database"
-    )
+    assert response.status_code == 404

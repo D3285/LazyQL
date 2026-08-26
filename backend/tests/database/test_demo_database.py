@@ -1,6 +1,7 @@
 from pathlib import Path
 
 from app.database.connection import create_database_adapter
+from app.models.database import DatabaseConfig
 
 
 DATABASE_PATH = (
@@ -12,10 +13,12 @@ DATABASE_PATH = (
 
 
 def test_demo_database_schema():
-    db = create_database_adapter(
-        "sqlite",
-        str(DATABASE_PATH),
+    config = DatabaseConfig(
+        database_type="sqlite",
+        connection_url=str(DATABASE_PATH),
     )
+
+    db = create_database_adapter(config)
 
     db.connect()
 
@@ -33,10 +36,12 @@ def test_demo_database_schema():
 
 
 def test_demo_database_query():
-    db = create_database_adapter(
-        "sqlite",
-        str(DATABASE_PATH),
+    config = DatabaseConfig(
+        database_type="sqlite",
+        connection_url=str(DATABASE_PATH),
     )
+
+    db = create_database_adapter(config)
 
     db.connect()
 
@@ -45,9 +50,7 @@ def test_demo_database_query():
     )
 
     assert result["columns"] == ["name", "salary"]
-
     assert len(result["rows"]) == 3
-
     assert result["rows"][0][0] == "Priya"
 
     db.close()
