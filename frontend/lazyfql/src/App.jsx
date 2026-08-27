@@ -1,26 +1,41 @@
-import { useConnection } from "./components/context/ConnectionContext";
+import { useState } from "react";
 
+import HomePage from "./components/HomePage";
 import ConnectionPage from "./components/ConnectionPage";
 import Workspace from "./components/Workspace";
 
-function App() {
-  const {
-    isConnected,
-    connect,
-    disconnect,
-  } = useConnection();
+import { useConnection } from "./components/context/ConnectionContext";
 
-  if (!isConnected) {
+function App() {
+  const { isConnected, disconnect } = useConnection();
+
+  const [showConnection, setShowConnection] =
+    useState(false);
+
+  if (isConnected) {
+    return (
+      <Workspace
+        onDisconnect={() => {
+          disconnect();
+          setShowConnection(false);
+        }}
+      />
+    );
+  }
+
+  if (showConnection) {
     return (
       <ConnectionPage
-        onConnect={connect}
+        onBack={() => setShowConnection(false)}
       />
     );
   }
 
   return (
-    <Workspace
-      onDisconnect={disconnect}
+    <HomePage
+      onGetStarted={() =>
+        setShowConnection(true)
+      }
     />
   );
 }

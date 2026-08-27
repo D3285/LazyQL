@@ -14,6 +14,9 @@ function Workspace({ onDisconnect }) {
   const {
     sessionId,
     databaseType,
+    schema,
+    isSchemaLoading,
+    schemaError,
   } = useConnection();
 
   const {
@@ -29,17 +32,15 @@ function Workspace({ onDisconnect }) {
   const [isEditing, setIsEditing] =
     useState(false);
 
-  const [results, setResults] =
-    useState({
-      columns: [],
-      rows: [],
-    });
+  const [results, setResults] = useState({
+    columns: [],
+    rows: [],
+  });
 
   const [hasExecuted, setHasExecuted] =
     useState(false);
 
-  const [error, setError] =
-    useState("");
+  const [error, setError] = useState("");
 
   const [confirmationOpen, setConfirmationOpen] =
     useState(false);
@@ -81,26 +82,23 @@ function Workspace({ onDisconnect }) {
 
     setIsEditing(false);
     setHasExecuted(false);
+
     setResults({
       columns: [],
       rows: [],
     });
+
     setError("");
   };
 
   const handleCancelEdit = () => {
-    setSql(
-      generatedQuery?.sql || ""
-    );
-
+    setSql(generatedQuery?.sql || "");
     setIsEditing(false);
     setError("");
   };
 
   const isDestructiveQuery = (query) => {
-    const normalized = query
-      .trim()
-      .toLowerCase();
+    const normalized = query.trim().toLowerCase();
 
     return (
       normalized.startsWith("update ") ||
@@ -116,16 +114,12 @@ function Workspace({ onDisconnect }) {
     const cleanSQL = sql.trim();
 
     if (!sessionId) {
-      setError(
-        "No database session is active."
-      );
+      setError("No database session is active.");
       return;
     }
 
     if (!cleanSQL) {
-      setError(
-        "SQL query cannot be empty."
-      );
+      setError("SQL query cannot be empty.");
       return;
     }
 
@@ -142,9 +136,7 @@ function Workspace({ onDisconnect }) {
 
   const executeQuery = async (query) => {
     if (!sessionId) {
-      setError(
-        "No database session is active."
-      );
+      setError("No database session is active.");
       return;
     }
 
@@ -164,10 +156,8 @@ function Workspace({ onDisconnect }) {
       }
 
       setResults({
-        columns:
-          response.columns || [],
-        rows:
-          response.rows || [],
+        columns: response.columns || [],
+        rows: response.rows || [],
       });
 
       setHasExecuted(true);
@@ -180,6 +170,7 @@ function Workspace({ onDisconnect }) {
       setSql(query);
 
       setConfirmationOpen(false);
+
       setAffectedRows(
         response.affected_rows ?? null
       );
@@ -192,7 +183,6 @@ function Workspace({ onDisconnect }) {
 
       setPendingSQL(query);
       setErrorModalOpen(true);
-
       setHasExecuted(false);
     }
   };
@@ -214,33 +204,33 @@ function Workspace({ onDisconnect }) {
   };
 
   return (
-    <main className="min-h-screen bg-[#080c11] text-[#d7e0e7]">
+    <main className="min-h-screen bg-[#08070d] text-[#e8e7ef]">
 
       {/* HEADER */}
 
-      <header className="flex h-16 items-center justify-between border-b border-[#202a34] bg-[#0c1117] px-5 md:px-8">
+      <header className="flex h-16 items-center justify-between border-b border-[#241b35] bg-[#0b0912] px-5 md:px-8">
 
         <div className="flex items-center gap-3">
 
-          <div className="grid h-9 w-9 place-items-center rounded-md border border-[#344653] bg-[#111820] font-mono text-xs font-semibold text-[#72b5c4]">
+          <div className="grid h-9 w-9 place-items-center rounded-md border border-[#6d3fd3] bg-[#171027] font-mono text-xs font-bold text-[#a879ff]">
             LQ
           </div>
 
           <div>
-            <div className="font-mono text-sm font-semibold tracking-[0.25em]">
+            <div className="font-mono text-sm font-bold tracking-[0.2em] text-white">
               LAZYQL
             </div>
 
-            <div className="hidden font-mono text-[8px] uppercase tracking-[0.2em] text-[#53616d] sm:block">
-              Natural Language SQL
+            <div className="hidden font-mono text-[8px] uppercase tracking-[0.2em] text-[#625b70] sm:block">
+              Local AI Database Assistant
             </div>
           </div>
 
         </div>
 
-        <div className="hidden items-center gap-2 font-mono text-[9px] uppercase tracking-wider text-[#71808c] sm:flex">
+        <div className="hidden items-center gap-2 font-mono text-[9px] uppercase tracking-wider text-[#777083] sm:flex">
 
-          <span className="h-2 w-2 rounded-full bg-[#55c48a]" />
+          <span className="h-2 w-2 rounded-full bg-[#4fd17b]" />
 
           {databaseType || "DATABASE"} · CONNECTED
 
@@ -250,75 +240,117 @@ function Workspace({ onDisconnect }) {
           type="button"
           onClick={onDisconnect}
           disabled={isExecuting}
-          className="rounded-md border border-[#293641] px-3 py-2 font-mono text-[9px] uppercase tracking-wider text-[#71808c] transition hover:border-[#4c8494] hover:text-[#b9c7d0] disabled:opacity-50"
+          className="rounded-md border border-[#302641] px-3 py-2 font-mono text-[9px] uppercase tracking-wider text-[#80798f] transition hover:border-[#7045d0] hover:text-white disabled:opacity-50"
         >
           Disconnect
         </button>
 
       </header>
 
-      {/* WORKSPACE */}
+      {/* MAIN WORKSPACE */}
 
-      <div className="grid min-h-[calc(100vh-64px)] md:grid-cols-[260px_1fr]">
+      <div className="grid min-h-[calc(100vh-64px)] md:grid-cols-[250px_1fr]">
 
-        <SchemaExplorer />
+        {/* SIDEBAR */}
 
-        <section className="mx-auto w-full max-w-5xl p-5 md:p-8">
+        <div className="border-r border-[#211a30] bg-[#0b0911]">
+
+          <SchemaExplorer />
+        </div>
+
+        {/* CONTENT */}
+
+        <section className="mx-auto w-full max-w-6xl p-5 md:p-8">
 
           {/* TITLE */}
 
           <div>
 
-            <div className="font-mono text-[9px] font-semibold uppercase tracking-[0.2em] text-[#5d96a3]">
-              SQL Assistant
+            <div className="font-mono text-[9px] font-semibold uppercase tracking-[0.22em] text-[#8a55ed]">
+              SQL ASSISTANT
             </div>
 
-            <h1 className="mt-2 text-2xl font-semibold tracking-tight text-[#e6edf3] md:text-3xl">
+            <h1 className="mt-2 font-mono text-2xl font-bold tracking-tight text-white md:text-3xl">
               Ask your database
             </h1>
 
-            <p className="mt-2 text-sm text-[#687783]">
-              Describe what you need in natural
-              language and LazyQL will generate SQL.
+            <p className="mt-2 max-w-2xl font-mono text-xs leading-6 text-[#6f697b]">
+              Describe what you need in natural language
+              and LazyQL will generate SQL for your database.
             </p>
 
           </div>
 
+          {/* SCHEMA STATUS */}
+
+          {isSchemaLoading && (
+            <div className="mt-5 rounded-md border border-[#302445] bg-[#100d18] px-4 py-3 font-mono text-[9px] text-[#837b91]">
+              Loading database schema...
+            </div>
+          )}
+
+          {schemaError && (
+            <div className="mt-5 rounded-md border border-[#572d3b] bg-[#1b0f17] px-4 py-3">
+
+              <div className="font-mono text-[9px] font-semibold uppercase tracking-wider text-[#ef718c]">
+                Schema Error
+              </div>
+
+              <p className="mt-2 font-mono text-xs text-[#c895a4]">
+                {schemaError}
+              </p>
+
+            </div>
+          )}
+
           {/* CHAT */}
 
-          <div className="mt-6 rounded-lg border border-[#202a34] bg-[#0e141b] p-4 md:p-5">
+          <div className="mt-6 overflow-hidden rounded-lg border border-[#282039] bg-[#0e0c15]">
 
-            <ChatInterface
-              schema={null}
-              onQueryGenerated={
-                handleQueryGenerated
-              }
-            />
+            <div className="border-b border-[#282039] bg-[#11101a] px-4 py-3">
+
+              <div className="font-mono text-[9px] font-semibold uppercase tracking-wider text-[#a879ff]">
+                Natural Language Query
+              </div>
+
+            </div>
+
+            <div className="p-4 md:p-5">
+
+              <ChatInterface
+                schema={schema}
+                onQueryGenerated={
+                  handleQueryGenerated
+                }
+              />
+
+            </div>
 
           </div>
 
           {/* SQL */}
 
           {sql && (
-            <div className="mt-6 overflow-hidden rounded-lg border border-[#202a34] bg-[#0e141b]">
+            <div className="mt-6 overflow-hidden rounded-lg border border-[#282039] bg-[#0e0c15]">
 
-              <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[#202a34] bg-[#111820] px-4 py-3">
+              <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[#282039] bg-[#11101a] px-4 py-3">
 
                 <div>
-                  <div className="font-mono text-[10px] font-semibold uppercase tracking-wider text-[#8ed0df]">
+
+                  <div className="font-mono text-[10px] font-semibold uppercase tracking-wider text-[#a879ff]">
                     Generated SQL
                   </div>
 
                   {generatedQuery?.confidence != null && (
-                    <div className="mt-1 font-mono text-[9px] text-[#596875]">
+                    <div className="mt-1 font-mono text-[9px] text-[#625b70]">
                       Confidence:{" "}
                       {Math.round(
-                        generatedQuery.confidence *
-                          100
+                        generatedQuery.confidence * 100
                       )}
                       %
                     </div>
                   )}
+
                 </div>
 
                 {!isEditing && (
@@ -328,7 +360,7 @@ function Workspace({ onDisconnect }) {
                       setIsEditing(true)
                     }
                     disabled={isExecuting}
-                    className="rounded-md border border-[#293641] px-3 py-2 font-mono text-[9px] uppercase tracking-wider text-[#7d919d] hover:border-[#4c8494] hover:text-[#aebbc5] disabled:opacity-50"
+                    className="rounded-md border border-[#33294a] px-3 py-2 font-mono text-[9px] uppercase tracking-wider text-[#8d849b] transition hover:border-[#7045d0] hover:text-white disabled:opacity-50"
                   >
                     Edit SQL
                   </button>
@@ -342,32 +374,26 @@ function Workspace({ onDisconnect }) {
                   <textarea
                     value={sql}
                     onChange={(event) =>
-                      setSql(
-                        event.target.value
-                      )
+                      setSql(event.target.value)
                     }
                     spellCheck={false}
-                    className="min-h-56 w-full resize-y rounded-md border border-[#293641] bg-[#080c11] p-4 font-mono text-xs leading-6 text-[#cbd7df] outline-none focus:border-[#4c8494]"
+                    className="min-h-56 w-full resize-y rounded-md border border-[#302744] bg-[#08070d] p-4 font-mono text-xs leading-6 text-[#d4cfdf] outline-none focus:border-[#7546dc] focus:ring-1 focus:ring-[#7546dc]/30"
                   />
 
                   <div className="mt-4 flex gap-2">
 
                     <button
                       type="button"
-                      onClick={
-                        handleSaveSQL
-                      }
-                      className="rounded-md bg-[#4c9aaa] px-4 py-2 font-mono text-[9px] font-semibold uppercase tracking-wider text-[#071014] hover:bg-[#62b4c4]"
+                      onClick={handleSaveSQL}
+                      className="rounded-md border border-[#7546dc] bg-[#6938d4] px-4 py-2 font-mono text-[9px] font-semibold uppercase tracking-wider text-white transition hover:bg-[#7849e8]"
                     >
                       Save SQL
                     </button>
 
                     <button
                       type="button"
-                      onClick={
-                        handleCancelEdit
-                      }
-                      className="rounded-md border border-[#293641] px-4 py-2 font-mono text-[9px] uppercase tracking-wider text-[#7d919d] hover:text-[#b9c7d0]"
+                      onClick={handleCancelEdit}
+                      className="rounded-md border border-[#302744] px-4 py-2 font-mono text-[9px] uppercase tracking-wider text-[#8d849b] transition hover:border-[#4a3d61] hover:text-white"
                     >
                       Cancel
                     </button>
@@ -376,21 +402,19 @@ function Workspace({ onDisconnect }) {
 
                 </div>
               ) : (
-                <pre className="max-h-[420px] overflow-auto bg-[#080c11] p-5 font-mono text-xs leading-6 text-[#cbd7df]">
-                  {sql}
+                <pre className="max-h-[420px] overflow-auto bg-[#08070d] p-5 font-mono text-xs leading-6 text-[#d4cfdf]">
+{sql}
                 </pre>
               )}
 
               {!isEditing && (
-                <div className="flex flex-wrap items-center gap-3 border-t border-[#202a34] px-4 py-4">
+                <div className="flex flex-wrap items-center gap-3 border-t border-[#282039] bg-[#0e0c15] px-4 py-4">
 
                   <button
                     type="button"
-                    onClick={
-                      handleExecute
-                    }
+                    onClick={handleExecute}
                     disabled={isExecuting}
-                    className="rounded-md bg-[#4c9aaa] px-5 py-2.5 font-mono text-[9px] font-semibold uppercase tracking-wider text-[#071014] hover:bg-[#62b4c4] disabled:cursor-not-allowed disabled:opacity-40"
+                    className="rounded-md border border-[#7546dc] bg-[#6938d4] px-5 py-2.5 font-mono text-[9px] font-semibold uppercase tracking-wider text-white transition hover:bg-[#7849e8] disabled:cursor-not-allowed disabled:opacity-40"
                   >
                     {isExecuting
                       ? "Executing..."
@@ -398,7 +422,7 @@ function Workspace({ onDisconnect }) {
                   </button>
 
                   {!hasExecuted && (
-                    <span className="font-mono text-[9px] text-[#596875]">
+                    <span className="font-mono text-[9px] text-[#625b70]">
                       Query has not been executed.
                     </span>
                   )}
@@ -409,16 +433,16 @@ function Workspace({ onDisconnect }) {
             </div>
           )}
 
-          {/* GENERATION / EXECUTION ERROR */}
+          {/* ERROR */}
 
           {error && !errorModalOpen && (
-            <div className="mt-5 rounded-md border border-[#51333a] bg-[#1b1115] p-4">
+            <div className="mt-5 rounded-md border border-[#572d3b] bg-[#1b0f17] p-4">
 
-              <div className="font-mono text-[9px] font-semibold uppercase tracking-wider text-[#df7c8a]">
+              <div className="font-mono text-[9px] font-semibold uppercase tracking-wider text-[#ef718c]">
                 Error
               </div>
 
-              <p className="mt-2 text-sm text-[#c6a1a7]">
+              <p className="mt-2 font-mono text-xs text-[#c895a4]">
                 {error}
               </p>
 
@@ -428,16 +452,20 @@ function Workspace({ onDisconnect }) {
           {/* RESULTS */}
 
           {hasExecuted && (
-            <div className="mt-6">
+            <div className="mt-6 overflow-hidden rounded-lg border border-[#282039] bg-[#0e0c15]">
+
+              <div className="border-b border-[#282039] bg-[#11101a] px-4 py-3">
+
+                <div className="font-mono text-[10px] font-semibold uppercase tracking-wider text-[#a879ff]">
+                  Query Results
+                </div>
+
+              </div>
 
               <ResultsTable
-                columns={
-                  results.columns
-                }
+                columns={results.columns}
                 rows={results.rows}
-                isLoading={
-                  isExecuting
-                }
+                isLoading={isExecuting}
               />
 
             </div>
@@ -453,9 +481,7 @@ function Workspace({ onDisconnect }) {
         open={confirmationOpen}
         sql={pendingSQL}
         affectedRows={affectedRows}
-        onConfirm={
-          handleConfirmExecute
-        }
+        onConfirm={handleConfirmExecute}
         onCancel={() => {
           setConfirmationOpen(false);
           setPendingSQL("");

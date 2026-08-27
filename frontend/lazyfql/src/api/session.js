@@ -1,31 +1,22 @@
 import { apiRequest } from "./client";
 
-export async function createSQLiteSession(file) {
-  if (!file) {
-    throw new Error("Please select a SQLite database file.");
+export async function createDatabaseSession({
+  databaseType,
+  connectionUrl,
+}) {
+  if (!databaseType) {
+    throw new Error("Database type is required.");
   }
 
-  const formData = new FormData();
+  if (!connectionUrl?.trim()) {
+    throw new Error("Connection URL is required.");
+  }
 
-  formData.append("database_type", "sqlite");
-  formData.append("file", file);
-
-  return apiRequest("/database/session", {
-    method: "POST",
-    body: formData,
-  });
-}
-
-export async function createPostgreSQLSession(connection) {
   return apiRequest("/database/session", {
     method: "POST",
     body: JSON.stringify({
-      database_type: "postgresql",
-      host: connection.host,
-      port: Number(connection.port),
-      database: connection.database,
-      username: connection.username,
-      password: connection.password,
+      database_type: databaseType,
+      connection_url: connectionUrl.trim(),
     }),
   });
 }
