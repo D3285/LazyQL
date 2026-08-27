@@ -11,19 +11,27 @@ function ConfirmationModal({
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4 backdrop-blur-sm">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#080910]/75 p-4 backdrop-blur-md">
 
-      <div className="w-full max-w-lg rounded-xl border border-[#3b3430] bg-[#11161d] shadow-2xl">
+      <div className="w-full max-w-lg overflow-hidden rounded-xl border border-[#51463b] bg-[#181a24] shadow-2xl">
 
         {/* HEADER */}
 
-        <div className="border-b border-[#252e37] px-5 py-4">
+        <div className="border-b border-[#34364a] bg-[#1d2030] px-5 py-4">
 
-          <div className="font-mono text-[10px] font-semibold uppercase tracking-wider text-[#d7b66d]">
-            Confirmation Required
+          <div className="flex items-center gap-2">
+
+            <span className="text-[#d6b36a]">
+              ◇
+            </span>
+
+            <div className="font-mono text-[10px] font-semibold uppercase tracking-wider text-[#d6b36a]">
+              Confirmation Required
+            </div>
+
           </div>
 
-          <h2 className="mt-2 text-lg font-semibold text-[#e6edf3]">
+          <h2 className="mt-2 text-lg font-semibold text-[#f4f1f6]">
             This query will modify your database
           </h2>
 
@@ -33,26 +41,26 @@ function ConfirmationModal({
 
         <div className="space-y-4 p-5">
 
-          <p className="text-sm leading-6 text-[#9aa7b3]">
+          <p className="text-sm leading-6 text-[#aaa7b7]">
             This operation may change or remove database
             records. Review the SQL before continuing.
           </p>
 
           {affectedRows != null && (
-            <div className="rounded-md border border-[#4b3d22] bg-[#19150d] px-4 py-3">
+            <div className="rounded-lg border border-[#594a2c] bg-[#211c12] px-4 py-3">
 
-              <div className="text-[9px] uppercase tracking-wider text-[#8c7850]">
+              <div className="font-mono text-[9px] uppercase tracking-wider text-[#a48c58]">
                 Potentially affected rows
               </div>
 
-              <div className="mt-1 font-mono text-lg text-[#d7b66d]">
+              <div className="mt-1 font-mono text-lg text-[#d6b36a]">
                 {affectedRows}
               </div>
 
             </div>
           )}
 
-          <pre className="max-h-48 overflow-auto rounded-md border border-[#252e37] bg-[#080c11] p-4 font-mono text-xs leading-6 text-[#cbd7df]">
+          <pre className="max-h-48 overflow-auto rounded-lg border border-[#34364a] bg-[#10121a] p-4 font-mono text-xs leading-6 text-[#d5d1dc]">
             {sql}
           </pre>
 
@@ -60,13 +68,13 @@ function ConfirmationModal({
 
         {/* ACTIONS */}
 
-        <div className="flex justify-end gap-2 border-t border-[#252e37] px-5 py-4">
+        <div className="flex justify-end gap-2 border-t border-[#34364a] bg-[#151722] px-5 py-4">
 
           <button
             type="button"
             onClick={onCancel}
             disabled={isLoading}
-            className="rounded-md border border-[#303c48] px-4 py-2 text-[10px] font-medium uppercase tracking-wider text-[#9ca8b4] hover:bg-[#171e26]"
+            className="rounded-md border border-[#414356] px-4 py-2 font-mono text-[10px] font-medium uppercase tracking-wider text-[#aaa7b7] transition hover:border-[#66687d] hover:bg-[#202333] hover:text-white"
           >
             Cancel
           </button>
@@ -75,7 +83,7 @@ function ConfirmationModal({
             type="button"
             onClick={onConfirm}
             disabled={isLoading}
-            className="rounded-md bg-[#a66b52] px-4 py-2 text-[10px] font-semibold uppercase tracking-wider text-white hover:bg-[#b9785c] disabled:opacity-50"
+            className="rounded-md bg-[#b06b61] px-4 py-2 font-mono text-[10px] font-semibold uppercase tracking-wider text-white transition hover:bg-[#c17a6f] disabled:opacity-50"
           >
             {isLoading
               ? "Executing..."
