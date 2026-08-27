@@ -25,7 +25,7 @@ function HomePage({ onGetStarted }) {
               </div>
 
               <div className="hidden text-[8px] uppercase tracking-[0.2em] text-[var(--lq-text-muted)] sm:block">
-                Local AI Database Assistant
+                AI Database Assistant
               </div>
             </div>
           </div>
