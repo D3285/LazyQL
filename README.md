@@ -28,9 +28,11 @@ It supports **SQLite and PostgreSQL**, allowing users to connect a database, aut
 
 # 🔗 Live Demo
 
-🌐 **Website:** `YOUR_FRONTEND_URL`
+🌐 **Frontend:** `YOUR_FRONTEND_URL`
 
-🔧 **Backend API:** `YOUR_BACKEND_URL`
+🔧 **Backend API:** https://lazyql.onrender.com
+
+📚 **API Documentation:** https://lazyql.onrender.com/docs
 
 ---
 
