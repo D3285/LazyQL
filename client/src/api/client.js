@@ -1,6 +1,7 @@
 const API_BASE_URL =
-  import.meta.env.VITE_API_BASE_URL ||
-  "http://127.0.0.1:8000";
+  import.meta.env.VITE_API_BASE_URL || "http://127.0.0.1:8000";
+
+const REQUEST_TIMEOUT = 60000; // 60 seconds
 
 export async function apiRequest(endpoint, options = {}) {
   const isFormData = options.body instanceof FormData;
@@ -14,29 +15,45 @@ export async function apiRequest(endpoint, options = {}) {
     ...(options.headers || {}),
   };
 
-  const response = await fetch(
-    `${API_BASE_URL}${endpoint}`,
-    {
-      ...options,
-      headers,
-    }
-  );
+  const controller = new AbortController();
 
-  let data = null;
+  const timeoutId = setTimeout(() => {
+    controller.abort();
+  }, REQUEST_TIMEOUT);
 
   try {
-    data = await response.json();
-  } catch {
-    // Empty response body
-  }
+    const response = await fetch(`${API_BASE_URL}${endpoint}`, {
+      ...options,
+      headers,
+      signal: controller.signal,
+    });
 
-  if (!response.ok) {
-    throw new Error(
-      data?.detail ||
-        data?.message ||
-        `Request failed with status ${response.status}`
-    );
-  }
+    let data = null;
 
-  return data;
+    try {
+      data = await response.json();
+    } catch {
+      // Empty response body
+    }
+
+    if (!response.ok) {
+      throw new Error(
+        data?.detail ||
+          data?.message ||
+          `Request failed with status ${response.status}`,
+      );
+    }
+
+    return data;
+  } catch (error) {
+    if (error.name === "AbortError") {
+      throw new Error(
+        "The server is taking too long to respond. It may be waking up from sleep. Please try again.",
+      );
+    }
+
+    throw error;
+  } finally {
+    clearTimeout(timeoutId);
+  }
 }
