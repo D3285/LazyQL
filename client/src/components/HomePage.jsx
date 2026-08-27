@@ -10,52 +10,45 @@ function HomePage({ onGetStarted }) {
         <div className="absolute -left-40 bottom-20 h-96 w-96 rounded-full bg-[var(--lq-purple)] opacity-[0.05] blur-3xl" />
       </div>
 
-     {/* NAVBAR */}
-<header className="sticky top-0 z-50 border-b border-[var(--lq-border)] bg-[var(--lq-bg)]/90 backdrop-blur-md">
-  <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-6">
+      {/* NAVBAR */}
+      <header className="sticky top-0 z-50 border-b border-[var(--lq-border)] bg-[var(--lq-bg)]/90 backdrop-blur-md">
+        <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-6">
 
-    {/* CLICKABLE LOGO */}
-    <button
-      type="button"
-      onClick={onGetStarted}
-      className="flex cursor-pointer items-center gap-3"
-    >
-      <div className="relative grid h-10 w-10 place-items-center overflow-hidden rounded-lg border border-[var(--lq-primary)] bg-[var(--lq-primary-soft)] font-mono text-xs font-bold text-[var(--lq-primary)]">
-        <span>LQ</span>
-      </div>
+          <div className="flex items-center gap-3">
+            <div className="relative grid h-10 w-10 place-items-center overflow-hidden rounded-lg border border-[var(--lq-primary)] bg-[var(--lq-primary-soft)] font-mono text-xs font-bold text-[var(--lq-primary)]">
+              <span>LQ</span>
+            </div>
 
-      <div className="text-left">
-        <div className="font-mono text-sm font-bold tracking-[0.18em] text-[var(--lq-text)]">
-          LAZYQL
+            <div>
+              <div className="font-mono text-sm font-bold tracking-[0.18em] text-[var(--lq-text)]">
+                LAZYQL
+              </div>
+
+              <div className="hidden text-[8px] uppercase tracking-[0.2em] text-[var(--lq-text-muted)] sm:block">
+                AI Database Assistant
+              </div>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-3">
+
+            <span className="hidden font-mono text-[9px] uppercase tracking-wider text-[var(--lq-text-muted)] md:block">
+              PostgreSQL · SQLite
+            </span>
+
+            <ThemeToggle />
+
+            <button
+              type="button"
+              onClick={onGetStarted}
+              className="rounded-md border border-[var(--lq-primary)] bg-[var(--lq-primary)] px-4 py-2 font-mono text-[9px] font-semibold uppercase tracking-wider text-white shadow-sm transition hover:bg-[var(--lq-primary-hover)]"
+            >
+              Get Started
+            </button>
+
+          </div>
         </div>
-
-        <div className="hidden text-[8px] uppercase tracking-[0.2em] text-[var(--lq-text-muted)] sm:block">
-          AI Database Assistant
-        </div>
-      </div>
-    </button>
-
-    {/* RIGHT SIDE */}
-    <div className="flex items-center gap-3">
-
-      <span className="hidden font-mono text-[9px] uppercase tracking-wider text-[var(--lq-text-muted)] md:block">
-        PostgreSQL · SQLite
-      </span>
-
-      <ThemeToggle />
-
-      <button
-        type="button"
-        onClick={onGetStarted}
-        className="rounded-md border border-[var(--lq-primary)] bg-[var(--lq-primary)] px-4 py-2 font-mono text-[9px] font-semibold uppercase tracking-wider text-white shadow-sm transition hover:bg-[var(--lq-primary-hover)]"
-      >
-        Get Started
-      </button>
-
-    </div>
-
-  </div>
-</header>
+      </header>
 
       {/* HERO */}
       <section className="relative overflow-hidden">
