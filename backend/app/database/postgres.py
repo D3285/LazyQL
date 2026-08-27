@@ -13,7 +13,27 @@ class PostgreSQLAdapter(DatabaseAdapter):
 
     def connect(self) -> bool:
         try:
-            self.engine = create_engine(self.connection_url)
+            url = self.connection_url
+
+            if url.startswith("postgresql://"):
+                url = url.replace(
+                    "postgresql://",
+                    "postgresql+psycopg://",
+                    1,
+                )
+
+            elif url.startswith("postgres://"):
+                url = url.replace(
+                    "postgres://",
+                    "postgresql+psycopg://",
+                    1,
+                )
+
+            self.engine = create_engine(
+                url,
+                pool_pre_ping=True,
+                pool_recycle=300,
+            )
 
             with self.engine.connect() as connection:
                 connection.execute(text("SELECT 1"))
@@ -22,6 +42,11 @@ class PostgreSQLAdapter(DatabaseAdapter):
 
         except Exception as exc:
             self.engine = None
+
+            print(
+                "POSTGRES ERROR:",
+                repr(exc),
+            )
 
             raise DatabaseConnectionError(
                 "Unable to connect to PostgreSQL database"
@@ -45,15 +70,12 @@ class PostgreSQLAdapter(DatabaseAdapter):
         with self.engine.begin() as connection:
             result = connection.execute(text(sql))
 
-            columns = list(result.keys())
-            rows = [
-                list(row)
-                for row in result.fetchall()
-            ]
-
             return {
-                "columns": columns,
-                "rows": rows,
+                "columns": list(result.keys()),
+                "rows": [
+                    list(row)
+                    for row in result.fetchall()
+                ],
             }
 
     def close(self):

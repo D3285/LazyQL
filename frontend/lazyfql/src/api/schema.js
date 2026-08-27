@@ -6,11 +6,9 @@ export async function getDatabaseSchema(sessionId) {
   }
 
   return apiRequest(
-    `/database/schema?session_id=${encodeURIComponent(
-      sessionId
-    )}`,
+    `/database/schema?session_id=${encodeURIComponent(sessionId)}`,
     {
-      method: "GET",
-    }
+      method: "POST",
+    },
   );
 }

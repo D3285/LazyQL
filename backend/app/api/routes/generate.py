@@ -1,6 +1,7 @@
 from fastapi import APIRouter, HTTPException
 
-from app.ai.mock import MockAIService
+from app.ai.gemini import GeminiService
+
 from app.database.session_manager import session_manager
 from app.models.generate import (
     GenerateRequest,
@@ -9,7 +10,7 @@ from app.models.generate import (
 
 router = APIRouter(prefix="/generate", tags=["AI"])
 
-ai_service = MockAIService()
+ai_service = GeminiService()
 
 
 @router.post("", response_model=GenerateResponse)

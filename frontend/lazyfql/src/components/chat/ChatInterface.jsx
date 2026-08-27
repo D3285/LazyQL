@@ -4,19 +4,16 @@ import MessageList from "./MessageList";
 import MessageInput from "./MessageInput";
 
 import { useGenerateSQL } from "../hooks/useGenerateSQL";
+import { useConnection } from "../context/ConnectionContext";
 
-function ChatInterface({
-  schema,
-  onQueryGenerated,
-}) {
+function ChatInterface({ onQueryGenerated }) {
   const [query, setQuery] = useState("");
   const [messages, setMessages] = useState([]);
   const [error, setError] = useState("");
 
-  const {
-    generate,
-    isLoading: isGenerating,
-  } = useGenerateSQL();
+  const { sessionId, schema } = useConnection();
+
+  const { generate, isLoading: isGenerating } = useGenerateSQL();
 
   const handleAsk = async (question = query) => {
     const cleanQuestion = question.trim();
@@ -25,10 +22,13 @@ function ChatInterface({
       return;
     }
 
+    if (!sessionId) {
+      setError("Database session is not available.");
+      return;
+    }
+
     if (!schema) {
-      setError(
-        "Database schema is not available yet."
-      );
+      setError("Database schema is not available yet.");
       return;
     }
 
@@ -47,14 +47,12 @@ function ChatInterface({
 
     try {
       const result = await generate({
+        sessionId,
         question: cleanQuestion,
-        schema,
       });
 
       if (!result?.sql) {
-        throw new Error(
-          "The AI did not return a SQL query."
-        );
+        throw new Error("The AI did not return a SQL query.");
       }
 
       setMessages((previous) => [
@@ -62,26 +60,19 @@ function ChatInterface({
         {
           id: `${Date.now()}-assistant`,
           role: "assistant",
-          text:
-            result.explanation ||
-            "SQL generated successfully.",
+          text: result.explanation || "SQL generated successfully.",
         },
       ]);
 
       onQueryGenerated?.({
         question: cleanQuestion,
         sql: result.sql,
-        explanation:
-          result.explanation || "",
+        explanation: result.explanation || "",
         confidence:
-          typeof result.confidence === "number"
-            ? result.confidence
-            : null,
+          typeof result.confidence === "number" ? result.confidence : null,
       });
     } catch (err) {
-      const message =
-        err?.message ||
-        "Unable to generate SQL.";
+      const message = err?.message || "Unable to generate SQL.";
 
       setError(message);
 
@@ -90,8 +81,7 @@ function ChatInterface({
         {
           id: `${Date.now()}-error`,
           role: "assistant",
-          text:
-            "I could not generate a query for that request.",
+          text: "I could not generate a query for that request.",
         },
       ]);
     }
@@ -99,7 +89,6 @@ function ChatInterface({
 
   return (
     <div className="flex min-h-0 flex-col gap-4">
-
       <MessageList
         messages={messages}
         isGenerating={isGenerating}
@@ -112,7 +101,6 @@ function ChatInterface({
         onAsk={handleAsk}
         isGenerating={isGenerating}
       />
-
     </div>
   );
 }

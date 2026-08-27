@@ -16,13 +16,20 @@ DATABASE_PATH = (
 
 
 def test_get_database_schema():
-    session_response = client.post(
-        "/database/session",
-        json={
-            "database_type": "sqlite",
-            "connection_url": str(DATABASE_PATH),
-        },
-    )
+    with DATABASE_PATH.open("rb") as file:
+        session_response = client.post(
+            "/database/session",
+            data={
+                "database_type": "sqlite",
+            },
+            files={
+                "file": (
+                    DATABASE_PATH.name,
+                    file,
+                    "application/octet-stream",
+                )
+            },
+        )
 
     assert session_response.status_code == 200
 
@@ -50,17 +57,27 @@ def test_get_database_schema():
     assert "departments" in table_names
 
 
-def test_database_session_connection_error():
-    response = client.post(
-        "/database/session",
-        json={
-            "database_type": "sqlite",
-            "connection_url": (
-                "Z:/this/path/does/not/exist/"
-                "database.db"
-            ),
-        },
+def test_database_session_connection_error(tmp_path):
+    invalid_file = tmp_path / "invalid.db"
+
+    invalid_file.write_text(
+        "this is not a sqlite database"
     )
+
+    with invalid_file.open("rb") as file:
+        response = client.post(
+            "/database/session",
+            data={
+                "database_type": "sqlite",
+            },
+            files={
+                "file": (
+                    invalid_file.name,
+                    file,
+                    "application/octet-stream",
+                )
+            },
+        )
 
     assert response.status_code == 503
 

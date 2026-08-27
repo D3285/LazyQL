@@ -9,13 +9,23 @@ client = TestClient(app)
 def test_create_sqlite_session(tmp_path):
     database_path = tmp_path / "test.db"
 
-    response = client.post(
-        "/database/session",
-        json={
-            "database_type": "sqlite",
-            "connection_url": str(database_path),
-        },
-    )
+    # Create a valid SQLite database
+    database_path.touch()
+
+    with database_path.open("rb") as file:
+        response = client.post(
+            "/database/session",
+            data={
+                "database_type": "sqlite",
+            },
+            files={
+                "file": (
+                    database_path.name,
+                    file,
+                    "application/octet-stream",
+                )
+            },
+        )
 
     assert response.status_code == 200
 

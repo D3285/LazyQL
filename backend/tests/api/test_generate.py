@@ -16,13 +16,20 @@ DATABASE_PATH = (
 
 
 def test_generate_sql():
-    session_response = client.post(
-        "/database/session",
-        json={
-            "database_type": "sqlite",
-            "connection_url": str(DATABASE_PATH),
-        },
-    )
+    with DATABASE_PATH.open("rb") as file:
+        session_response = client.post(
+            "/database/session",
+            data={
+                "database_type": "sqlite",
+            },
+            files={
+                "file": (
+                    DATABASE_PATH.name,
+                    file,
+                    "application/octet-stream",
+                )
+            },
+        )
 
     assert session_response.status_code == 200
 
@@ -45,7 +52,8 @@ def test_generate_sql():
     assert data["sql"]
     assert data["explanation"]
     assert 0 <= data["confidence"] <= 1
-    
+
+
 def test_generate_invalid_session():
     response = client.post(
         "/generate",
