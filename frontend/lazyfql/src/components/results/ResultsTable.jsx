@@ -5,10 +5,10 @@ function ResultsTable({
 }) {
   if (isLoading) {
     return (
-      <div className="rounded-lg border border-[#202a34] bg-[#0e141b] p-8 text-center">
-        <div className="mx-auto h-5 w-5 animate-spin rounded-full border-2 border-[#45636d] border-t-[#62b4c4]" />
+      <div className="rounded-lg border border-[var(--lq-border)] bg-[var(--lq-surface)] p-8 text-center">
+        <div className="mx-auto h-5 w-5 animate-spin rounded-full border-2 border-[var(--lq-border)] border-t-[var(--lq-primary)]" />
 
-        <p className="mt-3 text-xs text-[#71808c]">
+        <p className="mt-3 text-xs text-[var(--lq-text-muted)]">
           Loading results...
         </p>
       </div>
@@ -17,12 +17,12 @@ function ResultsTable({
 
   if (!columns.length) {
     return (
-      <div className="rounded-lg border border-[#202a34] bg-[#0e141b] p-8 text-center">
-        <p className="text-sm text-[#87949f]">
+      <div className="rounded-lg border border-[var(--lq-border)] bg-[var(--lq-surface)] p-8 text-center">
+        <p className="text-sm text-[var(--lq-text-soft)]">
           Query executed successfully.
         </p>
 
-        <p className="mt-1 text-xs text-[#596875]">
+        <p className="mt-1 text-xs text-[var(--lq-text-muted)]">
           No columns were returned.
         </p>
       </div>
@@ -30,37 +30,45 @@ function ResultsTable({
   }
 
   return (
-    <div className="overflow-hidden rounded-lg border border-[#202a34] bg-[#0e141b]">
+    <div className="overflow-hidden rounded-lg border border-[var(--lq-border)] bg-[var(--lq-surface)]">
 
-      <div className="flex items-center justify-between border-b border-[#202a34] bg-[#111820] px-4 py-3">
+      {/* HEADER */}
 
-        <span className="font-mono text-[10px] font-semibold uppercase tracking-wider text-[#8ed0df]">
+      <div className="flex items-center justify-between border-b border-[var(--lq-border)] bg-[var(--lq-surface-soft)] px-4 py-3">
+
+        <span className="flex items-center gap-2 font-mono text-[10px] font-semibold uppercase tracking-wider text-[var(--lq-primary)]">
+          <span className="text-xs">◈</span>
           Query Results
         </span>
 
-        <span className="font-mono text-[9px] text-[#687783]">
+        <span className="rounded-full bg-[var(--lq-primary-soft)] px-2 py-1 font-mono text-[9px] text-[var(--lq-primary)]">
           {rows.length} ROWS
         </span>
 
       </div>
 
+      {/* EMPTY RESULT */}
+
       {rows.length === 0 ? (
-        <div className="p-8 text-center text-sm text-[#687783]">
+        <div className="p-8 text-center text-sm text-[var(--lq-text-soft)]">
           Query executed successfully. No rows returned.
         </div>
       ) : (
+
+        /* TABLE */
+
         <div className="max-h-[500px] overflow-auto">
 
           <table className="w-full border-collapse text-left">
 
-            <thead className="sticky top-0 bg-[#0b1016]">
+            <thead className="sticky top-0 z-10 bg-[var(--lq-bg-soft)]">
 
-              <tr className="border-b border-[#202a34]">
+              <tr className="border-b border-[var(--lq-border)]">
 
                 {columns.map((column) => (
                   <th
                     key={column}
-                    className="whitespace-nowrap px-4 py-3 font-mono text-[10px] font-medium uppercase tracking-wider text-[#788895]"
+                    className="whitespace-nowrap px-4 py-3 font-mono text-[10px] font-semibold uppercase tracking-wider text-[var(--lq-text-soft)]"
                   >
                     {column}
                   </th>
@@ -75,13 +83,13 @@ function ResultsTable({
               {rows.map((row, rowIndex) => (
                 <tr
                   key={rowIndex}
-                  className="border-b border-[#19222b] last:border-0 hover:bg-[#121a22]"
+                  className="border-b border-[var(--lq-border)] last:border-0 hover:bg-[var(--lq-surface-soft)]"
                 >
 
                   {row.map((value, columnIndex) => (
                     <td
                       key={columnIndex}
-                      className="whitespace-nowrap px-4 py-3 font-mono text-xs text-[#b9c5ce]"
+                      className="whitespace-nowrap px-4 py-3 font-mono text-xs text-[var(--lq-text)]"
                     >
                       {value == null
                         ? "NULL"

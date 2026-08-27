@@ -1,7 +1,10 @@
 import { useConnection } from "../context/ConnectionContext";
 import SchemaTree from "./SchemaTree";
 
-function SchemaExplorer() {
+function SchemaExplorer({
+  collapsed = false,
+  onToggle,
+}) {
   const {
     databaseType,
     isConnected,
@@ -11,94 +14,314 @@ function SchemaExplorer() {
   } = useConnection();
 
   return (
-    <aside className="hidden border-r border-[#211a30] bg-[#0b0911] p-5 md:block">
+    <aside
+      className={`
+        h-full
+        min-h-[calc(100vh-64px)]
+        overflow-hidden
+        bg-[var(--lq-sidebar)]
+        text-[var(--lq-sidebar-text)]
+        transition-colors duration-300
+        ${collapsed ? "p-3" : "p-5"}
+      `}
+    >
 
-      {/* HEADER */}
+      {/* =====================================================
+          TOP
+      ====================================================== */}
 
-      <div className="flex items-center justify-between">
+      <div
+        className={`
+          flex items-center
+          ${collapsed
+            ? "justify-center"
+            : "justify-between"
+          }
+        `}
+      >
 
-        <div className="font-mono text-[9px] font-semibold uppercase tracking-[0.2em] text-[#8a55ed]">
-          Database
-        </div>
+        {!collapsed && (
+          <div className="flex items-center gap-2">
 
-        <span className="h-2 w-2 rounded-full bg-[#4fd17b]" />
+            <span
+              className="
+                text-sm
+                text-[var(--lq-primary)]
+              "
+            >
+              ✿
+            </span>
+
+            <div
+              className="
+                font-mono text-[10px]
+                font-semibold uppercase
+                tracking-[0.2em]
+                text-[var(--lq-primary)]
+              "
+            >
+              Database
+            </div>
+
+          </div>
+        )}
+
+        {collapsed && (
+          <span
+            className="
+              text-lg
+              text-[var(--lq-primary)]
+            "
+          >
+            ✿
+          </span>
+        )}
+
+        {!collapsed && (
+          <span
+            className="
+              h-2 w-2 rounded-full
+              bg-[var(--lq-success)]
+              shadow-[0_0_8px_rgba(94,203,139,0.5)]
+            "
+          />
+        )}
 
       </div>
 
-      <h2 className="mt-3 font-mono text-sm font-semibold text-white">
-        Company DB
-      </h2>
+      {/* =====================================================
+          DATABASE INFO
+      ====================================================== */}
 
-      {databaseType && (
-        <div className="mt-2 font-mono text-[9px] uppercase tracking-wider text-[#686174]">
-          {databaseType}
+      {!collapsed && (
+        <>
+          <h2
+            className="
+              mt-4
+              font-mono text-sm
+              font-semibold
+              text-[var(--lq-sidebar-text)]
+            "
+          >
+            Company DB
+          </h2>
+
+          {databaseType && (
+            <div
+              className="
+                mt-2
+                font-mono text-[10px]
+                uppercase tracking-wider
+                text-[var(--lq-text-muted)]
+              "
+            >
+              {databaseType}
+            </div>
+          )}
+        </>
+      )}
+
+      {/* =====================================================
+          SCHEMA
+      ====================================================== */}
+
+      {!collapsed && (
+        <div className="mt-7">
+
+          {!isConnected && (
+            <div
+              className="
+                rounded-lg
+                border border-[var(--lq-border)]
+                bg-[var(--lq-surface-soft)]
+                p-3
+                font-mono text-xs
+                leading-5
+                text-[var(--lq-text-soft)]
+              "
+            >
+              No database connected.
+            </div>
+          )}
+
+          {isConnected && isSchemaLoading && (
+            <div
+              className="
+                rounded-lg
+                border border-[var(--lq-border)]
+                bg-[var(--lq-surface-soft)]
+                p-3
+              "
+            >
+
+              <div
+                className="
+                  flex items-center gap-2
+                  font-mono text-xs
+                  text-[var(--lq-text-soft)]
+                "
+              >
+
+                <span
+                  className="
+                    h-2 w-2
+                    animate-pulse
+                    rounded-full
+                    bg-[var(--lq-primary)]
+                  "
+                />
+
+                Loading schema...
+
+              </div>
+
+            </div>
+          )}
+
+          {isConnected &&
+            !isSchemaLoading &&
+            schemaError && (
+              <div
+                className="
+                  rounded-lg
+                  border border-[var(--lq-danger-border)]
+                  bg-[var(--lq-danger-soft)]
+                  p-3
+                "
+              >
+
+                <div
+                  className="
+                    font-mono text-[10px]
+                    font-semibold uppercase
+                    tracking-wider
+                    text-[var(--lq-danger)]
+                  "
+                >
+                  Schema Error
+                </div>
+
+                <p
+                  className="
+                    mt-2
+                    font-mono text-xs
+                    leading-5
+                    text-[var(--lq-danger-text)]
+                  "
+                >
+                  {schemaError}
+                </p>
+
+              </div>
+            )}
+
+          {isConnected &&
+            !isSchemaLoading &&
+            !schemaError &&
+            schema && (
+              <div
+                className="
+                  rounded-lg
+                  border border-[var(--lq-border)]
+                  bg-[var(--lq-surface-soft)]
+                  p-3
+                  shadow-sm
+                "
+              >
+
+                <div
+                  className="
+                    mb-3
+                    flex items-center
+                    justify-between
+                    border-b
+                    border-[var(--lq-border)]
+                    pb-3
+                  "
+                >
+
+                  <span
+                    className="
+                      font-mono text-[10px]
+                      uppercase tracking-wider
+                      text-[var(--lq-text-muted)]
+                    "
+                  >
+                    Tables
+                  </span>
+
+                  <span
+                    className="
+                      rounded-full
+                      bg-[var(--lq-primary-soft)]
+                      px-2 py-0.5
+                      font-mono text-[10px]
+                      text-[var(--lq-primary)]
+                    "
+                  >
+                    {schema.tables?.length || 0}
+                  </span>
+
+                </div>
+
+                <SchemaTree
+                  tables={schema.tables || []}
+                />
+
+              </div>
+            )}
+
         </div>
       )}
 
-      {/* SCHEMA */}
+      {/* =====================================================
+          COLLAPSE BUTTON
+      ====================================================== */}
 
-      <div className="mt-7">
+      <div
+        className={`
+          mt-4
+          flex
+          ${collapsed
+            ? "justify-center"
+            : "justify-end"
+          }
+        `}
+      >
 
-        {!isConnected && (
-          <div className="rounded-md border border-[#282039] bg-[#0e0c15] p-3 font-mono text-[10px] leading-5 text-[#686174]">
-            No database connected.
-          </div>
-        )}
+        <button
+          type="button"
+          onClick={onToggle}
+          title={
+            collapsed
+              ? "Expand sidebar"
+              : "Collapse sidebar"
+          }
+          aria-label={
+            collapsed
+              ? "Expand sidebar"
+              : "Collapse sidebar"
+          }
+          className="
+            grid
+            h-9 w-9
+            place-items-center
+            rounded-md
+            border border-[var(--lq-border)]
+            bg-[var(--lq-surface)]
+            text-[var(--lq-text-soft)]
+            transition-all duration-200
+            hover:border-[var(--lq-primary)]
+            hover:bg-[var(--lq-primary-soft)]
+            hover:text-[var(--lq-primary)]
+          "
+        >
 
-        {isConnected && isSchemaLoading && (
-          <div className="rounded-md border border-[#282039] bg-[#0e0c15] p-3">
+          <span className="font-mono text-base leading-none">
+            {collapsed ? "→" : "←"}
+          </span>
 
-            <div className="flex items-center gap-2 font-mono text-[10px] text-[#81788e]">
-
-              <span className="h-2 w-2 animate-pulse rounded-full bg-[#8a55ed]" />
-
-              Loading schema...
-
-            </div>
-
-          </div>
-        )}
-
-        {isConnected &&
-          !isSchemaLoading &&
-          schemaError && (
-            <div className="rounded-md border border-[#572d3b] bg-[#1b0f17] p-3">
-
-              <div className="font-mono text-[9px] font-semibold uppercase tracking-wider text-[#ef718c]">
-                Schema Error
-              </div>
-
-              <p className="mt-2 font-mono text-[10px] leading-5 text-[#c895a4]">
-                {schemaError}
-              </p>
-
-            </div>
-          )}
-
-        {isConnected &&
-          !isSchemaLoading &&
-          !schemaError &&
-          schema && (
-            <div className="rounded-md border border-[#211a30] bg-[#0e0c15] p-3">
-
-              <div className="mb-3 flex items-center justify-between border-b border-[#211a30] pb-3">
-
-                <span className="font-mono text-[8px] uppercase tracking-wider text-[#625b70]">
-                  Tables
-                </span>
-
-                <span className="font-mono text-[8px] text-[#8a55ed]">
-                  {schema.tables?.length || 0}
-                </span>
-
-              </div>
-
-              <SchemaTree
-                tables={schema.tables || []}
-              />
-
-            </div>
-          )}
+        </button>
 
       </div>
 
