@@ -28,5 +28,13 @@ Thumbs.db
 *.sqlite
 *.sqlite3
 
+# Keep demo databases
+!database/samples/
+!database/samples/*.db
+
+# Frontend
+node_modules/
+dist/
+
 # Logs
 *.log
