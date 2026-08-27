@@ -299,48 +299,50 @@ function Workspace({ onDisconnect }) {
 
         {/* BRAND */}
 
-        <div className="flex items-center gap-3">
+       <button
+  type="button"
+  onClick={onBack}
+  className="flex cursor-pointer items-center gap-3"
+>
+  <div
+    className="
+      grid h-9 w-9 place-items-center
+      rounded-md
+      border border-[var(--lq-primary)]
+      bg-[var(--lq-primary-soft)]
+      font-mono text-xs font-bold
+      text-[var(--lq-primary)]
+    "
+  >
+    LQ
+  </div>
 
-          <div
-            className="
-              grid h-9 w-9 place-items-center
-              rounded-md
-              border border-[var(--lq-primary)]
-              bg-[var(--lq-primary-soft)]
-              font-mono text-xs font-bold
-              text-[var(--lq-primary)]
-            "
-          >
-            LQ
-          </div>
+  <div className="text-left">
 
-          <div>
+    <div
+      className="
+        font-mono text-sm font-bold
+        tracking-[0.2em]
+        text-[var(--lq-text)]
+      "
+    >
+      LAZYQL
+    </div>
 
-            <div
-              className="
-                font-mono text-sm font-bold
-                tracking-[0.2em]
-                text-[var(--lq-text)]
-              "
-            >
-              LAZYQL
-            </div>
+    <div
+      className="
+        hidden font-mono text-[8px]
+        uppercase tracking-[0.2em]
+        text-[var(--lq-text-muted)]
+        sm:block
+      "
+    >
+      Local AI Database Assistant
+    </div>
 
-            <div
-              className="
-                hidden font-mono text-[8px]
-                uppercase tracking-[0.2em]
-                text-[var(--lq-text-muted)]
-                sm:block
-              "
-            >
-              Local AI Database Assistant
-            </div>
+  </div>
 
-          </div>
-
-        </div>
-
+</button>
         {/* STATUS */}
 
         <div
