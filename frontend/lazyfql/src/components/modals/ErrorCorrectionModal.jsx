@@ -12,25 +12,17 @@ function ErrorCorrectionModal({
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#080910]/75 p-4 backdrop-blur-md">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4 backdrop-blur-sm">
 
-      <div className="w-full max-w-2xl overflow-hidden rounded-xl border border-[#603440] bg-[#181a24] shadow-2xl">
+      <div className="w-full max-w-2xl rounded-xl border border-[#51333a] bg-[#11161d] shadow-2xl">
 
-        <div className="border-b border-[#34364a] bg-[#1d2030] px-5 py-4">
+        <div className="border-b border-[#252e37] px-5 py-4">
 
-          <div className="flex items-center gap-2">
-
-            <span className="text-[#e98291]">
-              ⚠
-            </span>
-
-            <div className="font-mono text-[10px] font-semibold uppercase tracking-wider text-[#e98291]">
-              Query Error
-            </div>
-
+          <div className="font-mono text-[10px] font-semibold uppercase tracking-wider text-[#e47c8b]">
+            Query Error
           </div>
 
-          <h2 className="mt-2 text-lg font-semibold text-[#f4f1f6]">
+          <h2 className="mt-2 text-lg font-semibold text-[#e6edf3]">
             Correct the SQL and retry
           </h2>
 
@@ -38,19 +30,19 @@ function ErrorCorrectionModal({
 
         <div className="p-5">
 
-          <div className="rounded-lg border border-[#603440] bg-[#21151b] p-4">
+          <div className="rounded-md border border-[#51333a] bg-[#1b1115] p-4">
 
-            <div className="font-mono text-[9px] uppercase tracking-wider text-[#e98291]">
+            <div className="font-mono text-[9px] uppercase tracking-wider text-[#df7c8a]">
               Database response
             </div>
 
-            <p className="mt-2 text-sm leading-6 text-[#d09ca7]">
+            <p className="mt-2 text-sm leading-6 text-[#c6a1a7]">
               {error || "The query could not be executed."}
             </p>
 
           </div>
 
-          <label className="mt-5 block font-mono text-[9px] uppercase tracking-wider text-[#9693a5]">
+          <label className="mt-5 block font-mono text-[9px] uppercase tracking-wider text-[#637581]">
             SQL
           </label>
 
@@ -60,18 +52,18 @@ function ErrorCorrectionModal({
               onChange?.(event.target.value)
             }
             spellCheck={false}
-            className="mt-2 min-h-52 w-full resize-y rounded-lg border border-[#3b3d51] bg-[#10121a] p-4 font-mono text-xs leading-6 text-[#d5d1dc] outline-none transition focus:border-[#b28cff] focus:ring-1 focus:ring-[#b28cff]/20"
+            className="mt-2 min-h-52 w-full resize-y rounded-md border border-[#2b3945] bg-[#080c11] p-4 font-mono text-xs leading-6 text-[#cbd7df] outline-none focus:border-[#4c8494]"
           />
 
         </div>
 
-        <div className="flex justify-end gap-2 border-t border-[#34364a] bg-[#151722] px-5 py-4">
+        <div className="flex justify-end gap-2 border-t border-[#252e37] px-5 py-4">
 
           <button
             type="button"
             onClick={onClose}
             disabled={isLoading}
-            className="rounded-md border border-[#414356] px-4 py-2 font-mono text-[10px] font-medium uppercase tracking-wider text-[#aaa7b7] transition hover:border-[#66687d] hover:bg-[#202333] hover:text-white"
+            className="rounded-md border border-[#303c48] px-4 py-2 text-[10px] font-medium uppercase tracking-wider text-[#9ca8b4] hover:bg-[#171e26]"
           >
             Close
           </button>
@@ -80,7 +72,7 @@ function ErrorCorrectionModal({
             type="button"
             onClick={onRetry}
             disabled={isLoading}
-            className="rounded-md bg-[#7652d4] px-4 py-2 font-mono text-[10px] font-semibold uppercase tracking-wider text-white transition hover:bg-[#8965e5] disabled:opacity-50"
+            className="rounded-md bg-[#4c9aaa] px-4 py-2 text-[10px] font-semibold uppercase tracking-wider text-[#071014] hover:bg-[#62b4c4] disabled:opacity-50"
           >
             {isLoading
               ? "Retrying..."

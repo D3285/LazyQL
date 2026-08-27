@@ -2,125 +2,13 @@
 
 @import "tailwindcss";
 
-/* =========================================================
-   LAZYQL — GLOBAL THEME
-========================================================= */
-
 :root {
   font-family: "Inter", system-ui, sans-serif;
+  color: #e9e7f5;
+  background: #08070d;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
-
-  /* =========================
-     LIGHT MODE
-  ========================= */
-
-  --lq-bg: #f6f0e6;
-  --lq-bg-soft: #eee5d7;
-
-  --lq-surface: #fffaf2;
-  --lq-surface-soft: #f4eadc;
-
-  --lq-sidebar: #f0e7d9;
-  --lq-sidebar-text: #292421;
-
-  --lq-border: #dccdb9;
-
-  --lq-text: #292421;
-  --lq-text-soft: #6f655d;
-  --lq-text-muted: #93877d;
-
-  /* Brand */
-
-  --lq-primary: #a52b42;
-  --lq-primary-hover: #8d2338;
-  --lq-primary-soft: #f3d9df;
-
-  --lq-purple: #7650c9;
-  --lq-purple-soft: #e9def2;
-
-  --lq-gold: #b8862f;
-
-  /* Status */
-
-  --lq-success: #3c9a68;
-
-  /* Error */
-
-  --lq-danger: #b83c50;
-  --lq-danger-soft: #f8e4e7;
-  --lq-danger-border: #e3b9c1;
-  --lq-danger-text: #91404e;
-
-  /* Code / SQL */
-
-  --lq-code-bg: #f0e7da;
-  --lq-code-text: #302923;
-  --lq-code-border: #d8c7b2;
-
-  color: var(--lq-text);
-  background: var(--lq-bg);
 }
-
-
-/* =========================================================
-   DARK MODE
-
-   IMPORTANT:
-   ThemeToggle uses:
-   <html data-theme="dark">
-========================================================= */
-
-:root[data-theme="dark"] {
-
-  --lq-bg: #171214;
-  --lq-bg-soft: #21191c;
-
-  --lq-surface: #211a1d;
-  --lq-surface-soft: #292023;
-
-  --lq-sidebar: #18171e;
-  --lq-sidebar-text: #eee8e9;
-
-  --lq-border: #443338;
-
-  --lq-text: #f1e9e5;
-  --lq-text-soft: #b8aaa5;
-  --lq-text-muted: #817572;
-
-  /* Brand */
-
-  --lq-primary: #c33f59;
-  --lq-primary-hover: #d14b65;
-  --lq-primary-soft: #3a2028;
-
-  --lq-purple: #9570dc;
-  --lq-purple-soft: #382c3d;
-
-  --lq-gold: #c49a49;
-
-  /* Status */
-
-  --lq-success: #5ecb8b;
-
-  /* Error */
-
-  --lq-danger: #e98291;
-  --lq-danger-soft: #2b181e;
-  --lq-danger-border: #603440;
-  --lq-danger-text: #d09ca7;
-
-  /* Code / SQL */
-
-  --lq-code-bg: #151318;
-  --lq-code-text: #eee7e3;
-  --lq-code-border: #443338;
-}
-
-
-/* =========================================================
-   GLOBAL
-========================================================= */
 
 * {
   box-sizing: border-box;
@@ -128,49 +16,20 @@
 
 html {
   scroll-behavior: smooth;
-  background: var(--lq-bg);
-  transition: background-color 300ms ease;
+  background: #08070d;
 }
 
 body {
   margin: 0;
-
   min-width: 320px;
   min-height: 100vh;
-
   background:
     radial-gradient(
-      circle at 85% 5%,
-      rgba(165, 43, 66, 0.07),
-      transparent 28%
-    ),
-    radial-gradient(
-      circle at 10% 35%,
-      rgba(118, 80, 201, 0.04),
-      transparent 25%
-    ),
-    var(--lq-bg);
-
-  color: var(--lq-text);
-
-  transition:
-    background-color 300ms ease,
-    color 300ms ease;
-}
-
-:root[data-theme="dark"] body {
-  background:
-    radial-gradient(
-      circle at 85% 5%,
-      rgba(195, 63, 89, 0.11),
+      circle at 70% 10%,
+      rgba(124, 58, 237, 0.12),
       transparent 30%
     ),
-    radial-gradient(
-      circle at 10% 40%,
-      rgba(125, 78, 146, 0.06),
-      transparent 28%
-    ),
-    var(--lq-bg);
+    #08070d;
 }
 
 button,
@@ -186,106 +45,4 @@ button {
 
 button:disabled {
   cursor: not-allowed;
-}
-
-
-/* =========================================================
-   JAPANESE INSPIRED PATTERN
-========================================================= */
-
-.lq-pattern {
-  background-image:
-    linear-gradient(
-      135deg,
-      rgba(165, 43, 66, 0.035) 25%,
-      transparent 25%
-    ),
-    linear-gradient(
-      225deg,
-      rgba(165, 43, 66, 0.035) 25%,
-      transparent 25%
-    );
-
-  background-size: 22px 22px;
-}
-
-:root[data-theme="dark"] .lq-pattern {
-  background-image:
-    linear-gradient(
-      135deg,
-      rgba(195, 63, 89, 0.035) 25%,
-      transparent 25%
-    ),
-    linear-gradient(
-      225deg,
-      rgba(195, 63, 89, 0.035) 25%,
-      transparent 25%
-    );
-}
-
-
-/* =========================================================
-   SCROLLBAR
-========================================================= */
-
-::-webkit-scrollbar {
-  width: 9px;
-  height: 9px;
-}
-
-::-webkit-scrollbar-track {
-  background: var(--lq-bg-soft);
-}
-
-::-webkit-scrollbar-thumb {
-  background: var(--lq-border);
-  border-radius: 999px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: var(--lq-primary);
-}
-
-
-/* =========================================================
-   SELECTION
-========================================================= */
-
-::selection {
-  background: var(--lq-primary-soft);
-  color: var(--lq-text);
-}
-
-
-/* =========================================================
-   TEXTAREA / INPUT FOCUS
-========================================================= */
-
-input:focus,
-textarea:focus,
-select:focus {
-  outline: none;
-}
-
-
-/* =========================================================
-   SMOOTH THEME TRANSITIONS
-========================================================= */
-
-body,
-header,
-aside,
-section,
-main,
-button,
-input,
-textarea,
-select,
-table,
-pre,
-div {
-  transition:
-    background-color 250ms ease,
-    border-color 250ms ease,
-    color 250ms ease;
 }
