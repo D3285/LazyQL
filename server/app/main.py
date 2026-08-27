@@ -23,7 +23,7 @@ app.add_middleware(
 app.include_router(database_router)
 app.include_router(generate_router)
 
-@app.get("/health")
+@app.get("/")
 def health():
     return {
         "status": "ok",
