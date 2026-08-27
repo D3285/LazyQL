@@ -11,89 +11,94 @@ function SchemaExplorer() {
   } = useConnection();
 
   return (
-    <aside className="hidden min-h-[calc(100vh-56px)] border-r border-[#202832] bg-[#0c1117] md:block">
+    <aside className="hidden border-r border-[#211a30] bg-[#0b0911] p-5 md:block">
 
-      <div className="sticky top-0">
+      {/* HEADER */}
 
-        {/* HEADER */}
+      <div className="flex items-center justify-between">
 
-        <div className="border-b border-[#202832] px-4 py-4">
-
-          <div className="flex items-center justify-between">
-
-            <div className="font-mono text-[9px] font-semibold uppercase tracking-[0.18em] text-[#778693]">
-              Database
-            </div>
-
-            {isConnected && (
-              <div className="h-2 w-2 rounded-full bg-[#55c48a]" />
-            )}
-
-          </div>
-
-          <div className="mt-2 truncate text-sm font-medium text-[#d7e0e7]">
-            Connected Database
-          </div>
-
-          <div className="mt-1 font-mono text-[9px] uppercase text-[#596875]">
-            {schema?.database_type ||
-              databaseType ||
-              "UNKNOWN"}
-          </div>
-
+        <div className="font-mono text-[9px] font-semibold uppercase tracking-[0.2em] text-[#8a55ed]">
+          Database
         </div>
 
-        {/* SCHEMA */}
+        <span className="h-2 w-2 rounded-full bg-[#4fd17b]" />
 
-        <div className="px-3 py-4">
+      </div>
 
-          <div className="px-2 pb-2 font-mono text-[9px] uppercase tracking-[0.18em] text-[#53616d]">
-            Schema
+      <h2 className="mt-3 font-mono text-sm font-semibold text-white">
+        Company DB
+      </h2>
+
+      {databaseType && (
+        <div className="mt-2 font-mono text-[9px] uppercase tracking-wider text-[#686174]">
+          {databaseType}
+        </div>
+      )}
+
+      {/* SCHEMA */}
+
+      <div className="mt-7">
+
+        {!isConnected && (
+          <div className="rounded-md border border-[#282039] bg-[#0e0c15] p-3 font-mono text-[10px] leading-5 text-[#686174]">
+            No database connected.
           </div>
+        )}
 
-          {!isConnected && (
-            <div className="rounded-md border border-[#222c35] bg-[#10161c] p-3 text-xs text-[#667581]">
-              No database connected.
+        {isConnected && isSchemaLoading && (
+          <div className="rounded-md border border-[#282039] bg-[#0e0c15] p-3">
+
+            <div className="flex items-center gap-2 font-mono text-[10px] text-[#81788e]">
+
+              <span className="h-2 w-2 animate-pulse rounded-full bg-[#8a55ed]" />
+
+              Loading schema...
+
+            </div>
+
+          </div>
+        )}
+
+        {isConnected &&
+          !isSchemaLoading &&
+          schemaError && (
+            <div className="rounded-md border border-[#572d3b] bg-[#1b0f17] p-3">
+
+              <div className="font-mono text-[9px] font-semibold uppercase tracking-wider text-[#ef718c]">
+                Schema Error
+              </div>
+
+              <p className="mt-2 font-mono text-[10px] leading-5 text-[#c895a4]">
+                {schemaError}
+              </p>
+
             </div>
           )}
 
-          {isConnected &&
-            isSchemaLoading && (
-              <div className="flex items-center gap-2 rounded-md border border-[#222c35] bg-[#10161c] p-3 text-xs text-[#73818d]">
+        {isConnected &&
+          !isSchemaLoading &&
+          !schemaError &&
+          schema && (
+            <div className="rounded-md border border-[#211a30] bg-[#0e0c15] p-3">
 
-                <span className="h-3 w-3 animate-spin rounded-full border-2 border-[#45636d] border-t-transparent" />
+              <div className="mb-3 flex items-center justify-between border-b border-[#211a30] pb-3">
 
-                Reading schema...
+                <span className="font-mono text-[8px] uppercase tracking-wider text-[#625b70]">
+                  Tables
+                </span>
 
-              </div>
-            )}
-
-          {isConnected &&
-            !isSchemaLoading &&
-            schemaError && (
-              <div className="rounded-md border border-[#51333a] bg-[#1b1115] p-3">
-
-                <div className="font-mono text-[9px] uppercase tracking-wider text-[#df7c8a]">
-                  Schema error
-                </div>
-
-                <p className="mt-2 text-xs leading-5 text-[#b99ca2]">
-                  {schemaError}
-                </p>
+                <span className="font-mono text-[8px] text-[#8a55ed]">
+                  {schema.tables?.length || 0}
+                </span>
 
               </div>
-            )}
 
-          {isConnected &&
-            !isSchemaLoading &&
-            !schemaError &&
-            schema && (
               <SchemaTree
                 tables={schema.tables || []}
               />
-            )}
 
-        </div>
+            </div>
+          )}
 
       </div>
 

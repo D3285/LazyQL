@@ -1,45 +1,30 @@
 function SQLiteFileSelector({
-  onSubmit,
-  onFileChange,
+  connectionUrl,
+  onConnectionUrlChange,
+  disabled = false,
 }) {
   return (
-    <form
-      onSubmit={onSubmit}
-      className="text-center"
-    >
+    <div className="space-y-3">
+      <label className="block font-serif text-[10px] tracking-[0.18em] text-[#80602f]">
+        SQLITE CONNECTION URL
+      </label>
 
-      <div className="border border-dashed border-[#9b7943] px-6 py-12">
+      <input
+        type="text"
+        value={connectionUrl}
+        onChange={(event) =>
+          onConnectionUrlChange(event.target.value)
+        }
+        disabled={disabled}
+        placeholder="sqlite:///path/to/company.db"
+        className="w-full border border-[#b89a67] bg-[#fff8e8] px-4 py-3 font-mono text-sm text-[#24170c] outline-none transition focus:border-[#8c652d] disabled:opacity-50"
+      />
 
-        <div className="text-4xl text-[#b58a45]">
-          ◇
-        </div>
-
-        <h2 className="mt-5 font-serif text-xl">
-          Bring forth your archive
-        </h2>
-
-        <p className="mt-2 font-serif text-[#72572f]">
-          Select a local SQLite database.
-        </p>
-
-        <input
-          type="file"
-          accept=".db,.sqlite,.sqlite3"
-          onChange={onFileChange}
-          className="mt-6 font-serif text-sm"
-        />
-
-      </div>
-
-      <button
-        type="submit"
-        className="mt-6 w-full border border-[#9b702f] bg-gradient-to-br from-[#9b6e2d] to-[#c59a50] px-6 py-4 font-serif text-[10px] tracking-[0.2em] text-[#24170c] shadow-lg transition hover:-translate-y-1"
-      >
-        OPEN ARCHIVE
-        <span className="ml-5">→</span>
-      </button>
-
-    </form>
+      <p className="font-serif text-[11px] leading-5 text-[#80602f]">
+        Enter the SQLite connection URL expected by the
+        backend.
+      </p>
+    </div>
   );
 }
 
